@@ -81,6 +81,14 @@ wajib di isi).
    jupyter-notebook .
    ```
 
-Terima kasih untuk [Dicoding](https://www.dicoding.com/).
+## ☎️ Troubleshooting
+
+- Versi python tidak sesusai
+- Pastikan gunakan virtual environments
+- Pastikan depedensi terinstall dengan benar
+
+<br />
 
 ---
+
+Semoga bermanfaat 💫
