@@ -81,13 +81,11 @@ wajib di isi).
    jupyter-notebook .
    ```
 
-## ☎️ Troubleshooting
+## 🌐 Troubleshooting
 
 - Versi python tidak sesusai
 - Pastikan gunakan virtual environments
 - Pastikan depedensi terinstall dengan benar
-
-<br />
 
 ---
 
