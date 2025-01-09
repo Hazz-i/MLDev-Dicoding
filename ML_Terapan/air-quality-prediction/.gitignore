@@ -1,0 +1,31 @@
+# Python virtual environment
+venv
+env/
+ENV/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Log files
+*.log
+debug.log
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# GitHub-related files
+*.local
+.local/
+*.env
+*.cfg
+
+# Other common ignored files
+*.bak
+*.swp
+*.tmp
