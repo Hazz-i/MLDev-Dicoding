@@ -2,108 +2,158 @@
 
 ## Project Overview
 
-Pada bagian ini, Kamu perlu menuliskan latar belakang yang relevan dengan proyek yang diangkat.
+Sistem rekomendasi telah menjadi komponen penting dalam membantu pengguna menemukan informasi atau
+produk yang relevan di era digital. Dalam proyek ini, kami membangun sebuah sistem rekomendasi buku
+menggunakan pendekatan collaborative filtering berbasis item (item-based collaborative filtering).
 
-**Rubrik/Kriteria Tambahan (Opsional)**:
+Sistem ini bertujuan untuk memberikan rekomendasi buku yang relevan berdasarkan pola rating pengguna
+aktif.
 
-- Jelaskan mengapa proyek ini penting untuk diselesaikan.
-- Menyertakan hasil riset terkait atau referensi. Referensi yang diberikan harus berasal dari sumber
-  yang kredibel dan author yang jelas.
+### Pentingnya Proyek:
 
-  Format Referensi: [Judul Referensi](https://scholar.google.com/)
+- Mempermudah pengguna menemukan buku yang sesuai dengan minat mereka di antara ribuan pilihan.
+- Mengoptimalkan pengalaman pengguna dengan memberikan rekomendasi personal.
+- Menyediakan solusi atas tantangan kelebihan informasi (information overload) di platform buku
+  digital.
 
 ## Business Understanding
 
-Pada bagian ini, Anda perlu menjelaskan proses klarifikasi masalah.
-
-Bagian laporan ini mencakup:
-
 ### Problem Statements
 
-Menjelaskan pernyataan masalah:
-
-- Pernyataan Masalah 1
-- Pernyataan Masalah 2
-- Pernyataan Masalah n
+1. Bagaimana cara menyaring informasi dari dataset yang besar agar hanya mencakup pengguna aktif dan
+   buku populer?
+2. Bagaimana memberikan rekomendasi buku yang relevan berdasarkan pola rating pengguna aktif?
+3. Bagaimana mengintegrasikan informasi tambahan seperti nama penulis dan gambar buku untuk
+   meningkatkan pengalaman pengguna?
 
 ### Goals
 
-Menjelaskan tujuan proyek yang menjawab pernyataan masalah:
+1. Menyaring dataset untuk mencakup hanya pengguna aktif (memberi rating lebih dari 200 buku) dan
+   buku populer (memiliki lebih dari 50 rating).
+2. Membangun sistem rekomendasi buku menggunakan cosine similarity untuk mengukur kemiripan antar
+   buku.
+3. Menyediakan rekomendasi buku yang dilengkapi dengan informasi tambahan, seperti nama penulis dan
+   gambar sampul.
 
-- Jawaban pernyataan masalah 1
-- Jawaban pernyataan masalah 2
-- Jawaban pernyataan masalah n
+### Solution Statements
 
-Semua poin di atas harus diuraikan dengan jelas. Anda bebas menuliskan berapa pernyataan masalah dan
-juga goals yang diinginkan.
+1. **Collaborative Filtering**
 
-**Rubrik/Kriteria Tambahan (Opsional)**:
+   - Menggunakan item-based collaborative filtering untuk menghitung kesamaan antar buku berdasarkan
+     pola rating pengguna.
 
-- Menambahkan bagian “Solution Approach” yang menguraikan cara untuk meraih goals. Bagian ini dibuat
-  dengan ketentuan sebagai berikut:
-
-  ### Solution statements
-
-  - Mengajukan 2 atau lebih solution approach (algoritma atau pendekatan sistem rekomendasi).
+2. **Content Enrichment**
+   - Mengintegrasikan informasi tambahan, seperti gambar buku dan nama penulis, untuk meningkatkan
+     daya tarik rekomendasi.
 
 ## Data Understanding
 
-Paragraf awal bagian ini menjelaskan informasi mengenai jumlah data, kondisi data, dan informasi
-mengenai data yang digunakan. Sertakan juga sumber atau tautan untuk mengunduh dataset. Contoh:
-[UCI Machine Learning Repository](https://archive.ics.uci.edu/ml/datasets/Restaurant+%26+consumer+data).
+Dataset yang digunakan terdapat 3 data csv yang terdiri dari users.csv, ratings.csv, dan books.csv
+masing masing berisi mengnai informasi tentang buku, pengguna, dan rating yang diberikan oleh
+pengguna.
 
-Selanjutnya, uraikanlah seluruh variabel atau fitur pada data. Sebagai contoh:
+Berikut detail dari dataset yang di gunakan:
 
-Variabel-variabel pada Restaurant UCI dataset adalah sebagai berikut:
+1. **Books.csv** Merupakan data buku diidentifikasi dengan ISBN masing-masing. ISBN yang tidak valid
+   telah dihapus dari kumpulan data. Selain itu, beberapa informasi berbasis konten diberikan
+   (Judul-Buku, Pengarang-Buku, Tahun-Terbit, Penerbit), yang diperoleh dari Amazon Web Services.
+   Perhatikan bahwa jika ada beberapa pengarang, hanya pengarang pertama yang disediakan. URL yang
+   menautkan ke gambar sampul juga diberikan, muncul dalam tiga rasa yang berbeda (Image-URL-S,
+   Image-URL-M, Image-URL-L), yaitu kecil, sedang, besar. URL ini mengarah ke situs web Amazon.
 
-- accepts : merupakan jenis pembayaran yang diterima pada restoran tertentu.
-- cuisine : merupakan jenis masakan yang disajikan pada restoran.
-- dst
+2. **Users.csv** Merupakan data pengguna. Perhatikan bahwa ID pengguna (User-ID) telah dianonimkan
+   dan dipetakan ke bilangan bulat. Data demografis disediakan (Lokasi, Usia) jika tersedia. Jika
+   tidak, bidang ini berisi nilai NULL.
 
-**Rubrik/Kriteria Tambahan (Opsional)**:
+3. **Ratings.csv** Merupakan data rating yang berisi informasi peringkat buku. Peringkat
+   (Book-Rating) dapat berupa eksplisit, dinyatakan dalam skala 1-10 (nilai yang lebih tinggi
+   menunjukkan apresiasi yang lebih tinggi), atau implisit, dinyatakan dengan angka 0.
 
-- Melakukan beberapa tahapan yang diperlukan untuk memahami data, contohnya teknik visualisasi data
-  beserta insight atau exploratory data analysis.
+### Sumber Data
+
+Dataset diperoleh dari
+[Kaggle Book Recommendation Dataset](https://www.kaggle.com/datasets/arashnic/book-recommendation-dataset).
 
 ## Data Preparation
 
-Pada bagian ini Anda menerapkan dan menyebutkan teknik data preparation yang dilakukan. Teknik yang
-digunakan pada notebook dan laporan harus berurutan.
+### Langkah-Langkah:
 
-**Rubrik/Kriteria Tambahan (Opsional)**:
+1. **Filter Pengguna Aktif**: Memilih pengguna yang telah memberi rating lebih dari 200 buku:
 
-- Menjelaskan proses data preparation yang dilakukan
-- Menjelaskan alasan mengapa diperlukan tahapan data preparation tersebut.
+   ```python
+   active_users = books_with_ratings.groupby('User-ID').count()['Book-Rating'] > 200
+   active_users = active_users[active_users].index
+   filtered_rating = books_with_ratings[books_with_ratings['User-ID'].isin(active_users)]
+   ```
+
+2. **Filter Buku Populer**: Memilih buku yang memiliki lebih dari 50 rating:
+
+   ```python
+   famous_books = filtered_rating.groupby('Book-Title').count()['Book-Rating'] >= 50
+   famous_books = famous_books[famous_books].index
+   final_ratings = filtered_rating[filtered_rating['Book-Title'].isin(famous_books)]
+   ```
+
+3. **Pivot Table**: Membuat tabel pivot untuk kemiripan antar buku:
+   ```python
+   pt = final_ratings.pivot_table(index='Book-Title', columns='User-ID', values='Book-Rating').fillna(0)
+   ```
 
 ## Modeling
 
-Tahapan ini membahas mengenai model sisten rekomendasi yang Anda buat untuk menyelesaikan
-permasalahan. Sajikan top-N recommendation sebagai output.
+### Pendekatan: Item-Based Collaborative Filtering
 
-**Rubrik/Kriteria Tambahan (Opsional)**:
+1. **Cosine Similarity**: Menghitung kesamaan antar buku berdasarkan tabel pivot:
 
-- Menyajikan dua solusi rekomendasi dengan algoritma yang berbeda.
-- Menjelaskan kelebihan dan kekurangan dari solusi/pendekatan yang dipilih.
+   ```python
+   from sklearn.metrics.pairwise import cosine_similarity
+   similarity_scores = cosine_similarity(pt)
+   ```
+
+2. **Fungsi Rekomendasi**:
+
+   ```python
+   def recommend(book_name):
+       index = np.where(pt.index == book_name)[0][0]
+       similar_items = sorted(list(enumerate(similarity_scores[index])), key=lambda x: x[1], reverse=True)[1:5]
+
+       data = []
+       for i in similar_items:
+           item = []
+           temp_df = books_df[books_df['Book-Title'] == pt.index[i[0]]]
+           item.extend(list(temp_df.drop_duplicates('Book-Title')['Book-Title'].values))
+           item.extend(list(temp_df.drop_duplicates('Book-Title')['Book-Author'].values))
+           item.extend(list(temp_df.drop_duplicates('Book-Title')['Image-URL-M'].values))
+           data.append(item)
+       return data
+   ```
+
+3. **Output Rekomendasi**: Rekomendasi buku akan menampilkan:
+   - Judul buku
+   - Nama penulis
+   - Gambar sampul buku
+
+### Contoh Implementasi:
+
+```python
+recommend('1984')
+```
 
 ## Evaluation
 
-Pada bagian ini Anda perlu menyebutkan metrik evaluasi yang digunakan. Kemudian, jelaskan hasil
-proyek berdasarkan metrik evaluasi tersebut.
+### Metrik Evaluasi
 
-Ingatlah, metrik evaluasi yang digunakan harus sesuai dengan konteks data, problem statement, dan
-solusi yang diinginkan.
+- **Cosine Similarity**: Menilai tingkat kemiripan antara buku yang direkomendasikan dengan buku
+  yang dipilih.
+- **Precision@K**: Mengukur relevansi rekomendasi terhadap buku yang diinginkan pengguna.
 
-**Rubrik/Kriteria Tambahan (Opsional)**:
+### Hasil Evaluasi
 
-- Menjelaskan formula metrik dan bagaimana metrik tersebut bekerja.
+- Sistem mampu memberikan rekomendasi dengan kemiripan tinggi berdasarkan pola rating.
+- Relevansi rekomendasi meningkat dengan mempertimbangkan pengguna aktif dan buku populer.
 
-**---Ini adalah bagian akhir laporan---**
+---
 
-_Catatan:_
-
-- _Anda dapat menambahkan gambar, kode, atau tabel ke dalam laporan jika diperlukan. Temukan caranya
-  pada contoh dokumen markdown di situs editor [Dillinger](https://dillinger.io/),
-  [Github Guides: Mastering markdown](https://guides.github.com/features/mastering-markdown/), atau
-  sumber lain di internet. Semangat!_
-- Jika terdapat penjelasan yang harus menyertakan code snippet, tuliskan dengan sewajarnya. Tidak
-  perlu menuliskan keseluruhan kode project, cukup bagian yang ingin dijelaskan saja.
+Laporan ini mencakup semua tahapan, mulai dari pemahaman bisnis hingga evaluasi model. Dengan sistem
+rekomendasi ini, pengguna dapat menikmati pengalaman yang lebih personal dan efisien dalam menemukan
+buku yang mereka sukai.
